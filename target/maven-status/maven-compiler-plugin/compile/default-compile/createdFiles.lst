@@ -1,0 +1,9 @@
+com\jxq\dataobject\UserDO.class
+com\jxq\App.class
+com\jxq\service\UserService.class
+com\jxq\service\impl\UserServiceImpl.class
+com\jxq\service\model\UserModel.class
+com\jxq\controller\UserController.class
+com\jxq\dao\UserDOMapper.class
+com\jxq\dao\UserPasswordDOMapper.class
+com\jxq\dataobject\UserPasswordDO.class
