@@ -1,14 +1,42 @@
 慕课网SpringBoot构建电商基础秒杀项目，课程地址https://www.imooc.com/learn/1079
+====
+电商项目简介
+-------
+通过SpringBoot快速搭建的前后端分离的电商基础秒杀项目项目通过应用领域驱动型的分层模型设计方式去完成：用户OTP注册，登陆，查看，商品列表，进入商品详情以及倒计时秒杀开始后下单购买的基本流程。
+
+项目要点
+---------
+* 使用配置mybatis自动生成器来生成文件，    在mybatis-generator.xml配置文件中在对应生成表类名配置中加入
+enableCountByExample =“false”enableUpdateByExample =“false”enableDeleteByExample =“false”enableSelectByExample =“false”selectByExampleQueryId = “假”避免生成不常用方法
+* 使用LocalDatTime，乔达时间类库代替java.util.date
+* 前端ajax调用接口获取验证码html / getotp.html，出现跨域请求问题解决方法：@CrossOrigin（origins = {“*”}，allowCredentials =“true”）allowedHeaders允许前端将令牌放入标头做会话共享的跨域请求.allowCredentials授信后，需前端也设置xhfFields授信才能实现跨域会话共享.xhrFields：{withCredentials：true}，
+* 统一前端返回格式CommonReturnType {status：xx，object：xx} dataobject - >与数据库对应的映射对象模型 - >用于业务逻辑服务的领域模型对象viewobject - >用于前端交互的模型对象
+
+* 使用hibernate-validator通过注解来完成模型参数校验
+* insertSelective中设置keyProperty =“id”useGeneratedKeys =“true”使得插入完后的DO生成自增id。insertSelective与insert区别：insertSelective对应  的sql语句加入了NULL校验，即只会插入数据不为null的字段值（空的字段依赖于数据库字段默认值）插入则会插入所有字段，会插入空。
+
+* 数据库设计规范，设计时字段要设置为not null，并设置默认值，避免唯一索引在null情况下失效等类似场景
+
+* 解决如果事务createorder下单如果回滚，该下单方法中获得流水号id回滚，使等到的id号可能再一次被使用在generatorOrderNo方法前加注解：@Transactional（propagation = Propagation.REQUIRES_NEW）
+
+* 使用聚合模型在itemModel加入PromoModel promoModel，若不为空表示其未结束的秒杀活动;在orderModel中加入promoId，若不为空，则以秒杀方式下单
+
+
 
 第一章课程介绍
-===
-电商秒杀应用简介
-
-商品列表页获取秒杀商品列表
-进入商品详情页获取秒杀商品详情
-秒杀开始后进入下单确认页下单并支付成功
+#
+1.电商秒杀应用简介
+##
+ * 获取opt,登录,注册<br>
+ * 商品列表页获取秒杀商品列表<br>
+ * 进入商品详情页获取秒杀商品详情<br>
+ * 秒杀开始后进入下单确认页下单并支付成功<br>
+ 
 第二章 应用SpringBoot完成基础项目搭建
+#
 2.1 使用IDEA创建maven项目
+##
+
 1.new->project->maven项目->选择maven-archetype-quickstart
 
 以jar包方式对外输出
@@ -35,7 +63,7 @@ Building a RESTful Web Service
   <groupId>org.springframework.boot</groupId>
   <artifactId>spring-boot-starter-web</artifactId>
 </dependency>
-3.maven Reimport刷新一下，会自动下载相应jar包（注：可以把idea设定为自动导入maven依赖）
+3.maven Reimport刷新一下，会自动下载相应jar包（注：可以把idea设定为自动导入maven依赖
 
 4.SpringBoot的Web项目
 
